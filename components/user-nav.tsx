@@ -69,28 +69,22 @@ export function UserNav() {
         <DropdownMenuLabel className="bg-yellow-400 text-black italic border-b-2 border-black">User Options</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer">
-            <Link href="/profile" legacyBehavior passHref>
-              <div className="flex items-center w-full uppercase">
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </div>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link href="/profile" className="flex items-center w-full uppercase">
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            <Link href="/my-stories" legacyBehavior passHref>
-              <div className="flex items-center w-full uppercase">
-                <BookOpen className="mr-2 h-4 w-4" />
-                <span>My Stories</span>
-              </div>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link href="/my-stories" className="flex items-center w-full uppercase">
+              <BookOpen className="mr-2 h-4 w-4" />
+              <span>My Stories</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            <Link href="/nft-gallery" legacyBehavior passHref>
-              <div className="flex items-center w-full uppercase">
-                <Wallet className="mr-2 h-4 w-4" />
-                <span>My NFTs</span>
-              </div>
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link href="/nft-gallery" className="flex items-center w-full uppercase">
+              <Wallet className="mr-2 h-4 w-4" />
+              <span>My NFTs</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
