@@ -238,7 +238,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="bg-[#36454F] border-l-4 border-black text-white p-0">
                 <SheetHeader className="p-6 border-b-4 border-black">
-                  <SheetTitle className="text-white comic-pop text-xl flex items-center gap-2" style={{ textShadow: '2px 2px 0px rgba(0,0,0,1)' }}>
+                  <SheetTitle className="text-white comic-pop text-xl flex items-center gap-2 text-shadow-comic">
                     <div className="w-8 h-8 relative">
                       <Image src="/logo.png" alt="Logo" fill className="object-contain" />
                     </div>
@@ -250,7 +250,10 @@ export function Header() {
                     <WalletConnect />
                   </div>
                   {navItems.map((item, index) => (
-                    <div key={index} className="flex flex-col">
+                    <div
+                      key={item.type === 'dropdown' ? `dropdown-${item.label}` : item.href || `item-${index}`}
+                      className="flex flex-col"
+                    >
                       {item.type === 'dropdown' ? (
                         <>
                           <div className="px-4 py-2 text-sm font-bold uppercase text-white/60 mt-2">
@@ -273,7 +276,10 @@ export function Header() {
                           <Link
                             href={item.href}
                             onClick={() => setSheetOpen(false)}
-                            className="px-4 py-3 text-lg hover:bg-white/10 rounded-md transition-colors comic-text flex items-center"
+                            className={cn(
+                              "px-4 py-3 text-lg hover:bg-white/10 rounded-md transition-colors comic-text flex items-center",
+                              pathname === item.href && "bg-primary/20 text-primary"
+                            )}
                           >
                             {item.icon}
                             {item.label}

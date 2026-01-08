@@ -5,7 +5,6 @@
 @tailwind utilities;
 
 :root {
-  /* Gen-Z Comic Palette - VIBRANT & HIGH CONTRAST! */
   --background: #ffffff;
   --foreground: #000000;
 
@@ -200,6 +199,10 @@
 @layer utilities {
   .text-comic-shadow {
     text-shadow: 2px 2px 0px var(--shadow-color);
+  }
+
+  .text-shadow-comic {
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
   }
 
   .box-comic-shadow {
