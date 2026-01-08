@@ -59,6 +59,7 @@ export function Header() {
   const { toast } = useToast();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   // Track scroll position for adding box shadow to header
   useEffect(() => {
@@ -224,7 +225,7 @@ export function Header() {
 
           {/* Mobile Menu */}
           <div className="md:hidden">
-            <Sheet>
+            <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
@@ -258,6 +259,7 @@ export function Header() {
                             <Link
                               key={subItem.href}
                               href={subItem.href}
+                              onClick={() => setSheetOpen(false)}
                               className="px-6 py-3 text-lg hover:bg-white/10 rounded-md transition-colors comic-text flex items-center"
                             >
                               {subItem.icon}
@@ -269,6 +271,7 @@ export function Header() {
                         item.href && (
                           <Link
                             href={item.href}
+                            onClick={() => setSheetOpen(false)}
                             className="px-4 py-3 text-lg hover:bg-white/10 rounded-md transition-colors comic-text flex items-center"
                           >
                             {item.icon}
@@ -283,6 +286,7 @@ export function Header() {
                       variant="outline"
                       className="w-full justify-start text-lg bg-primary/20 hover:bg-primary/30 text-primary border-white/10 comic-pop"
                       onClick={() => {
+                        setSheetOpen(false);
                         handleCreateClick();
                       }}
                     >
