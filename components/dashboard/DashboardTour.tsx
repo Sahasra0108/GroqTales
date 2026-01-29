@@ -4,7 +4,13 @@ import { useState, useEffect } from "react";
 import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 import { useTheme } from "next-themes";
 
-export function DashboardTour() {
+export function DashboardTour({
+  shouldRun,
+  onComplete,
+}: {
+  shouldRun: boolean;
+  onComplete?: () => void;
+}) {
   const [run, setRun] = useState(false);
   const { theme } = useTheme();
 
@@ -31,17 +37,14 @@ export function DashboardTour() {
   ];
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem("has_seen_dashboard_tour");
-    if (!hasSeenTour) {
-      setRun(true);
-    }
-  }, []);
+    setRun(shouldRun);
+  }, [shouldRun]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status } = data;
     if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
       setRun(false);
-      localStorage.setItem("has_seen_dashboard_tour", "true");
+      onComplete?.();
     }
   };
 

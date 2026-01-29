@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { OnboardingChecklist } from "@/components/dashboard/OnboardingChecklist";
 import { DashboardTour } from "@/components/dashboard/DashboardTour";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,10 +15,54 @@ import {
   ArrowUpRight 
 } from "lucide-react";
 
+interface ChecklistStep {
+  id: string;
+  label: string;
+  isCompleted: boolean;
+  actionUrl?: string;
+}
+
 export default function DashboardPage() {
+  const [runTour, setRunTour] = useState(false);
+
+  const [isChecklistVisible, setIsChecklistVisible] = useState(false);
+
+  const [checklistSteps, setChecklistSteps] = useState<ChecklistStep[]>([
+    { id: "profile", label: "Complete your Creator Profile", isCompleted: true },
+    { id: "wallet", label: "Connect Web3 Wallet", isCompleted: false },
+    { id: "story", label: "Publish your first Story", isCompleted: false },
+    { id: "mint", label: "Mint a Story NFT", isCompleted: false },
+    { id: "social", label: "Share on Social Media", isCompleted: false },
+  ]);
+
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem("has_seen_dashboard_tour");
+    if (!hasSeenTour) {
+      setRunTour(true);
+    }
+
+    const isDismissed = localStorage.getItem("onboarding_dismissed");
+    if (!isDismissed) {
+      setIsChecklistVisible(true);
+    }
+  }, []);
+
+  const handleTourComplete = () => {
+    setRunTour(false);
+    localStorage.setItem("has_seen_dashboard_tour", "true");
+  };
+
+  const handleChecklistDismiss = () => {
+    setIsChecklistVisible(false);
+    localStorage.setItem("onboarding_dismissed", "true");
+  };
+
   return (
     <div className="min-h-screen bg-background p-8">
-      <DashboardTour />
+      <DashboardTour 
+        shouldRun={runTour} 
+        onComplete={handleTourComplete} 
+      />
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
@@ -29,7 +76,11 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <OnboardingChecklist />
+      <OnboardingChecklist 
+        steps={checklistSteps}
+        isVisible={isChecklistVisible}
+        onDismiss={handleChecklistDismiss}
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
         <Card className="tour-analytics">

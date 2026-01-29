@@ -13,29 +13,19 @@ interface ChecklistStep {
   actionUrl?: string;
 }
 
-export function OnboardingChecklist() {
-  const [isVisible, setIsVisible] = useState(true);
-  
-  const [steps, setSteps] = useState<ChecklistStep[]>([
-    { id: "profile", label: "Complete your Creator Profile", isCompleted: true },
-    { id: "wallet", label: "Connect Web3 Wallet", isCompleted: false },
-    { id: "story", label: "Publish your first Story", isCompleted: false },
-    { id: "mint", label: "Mint a Story NFT", isCompleted: false },
-    { id: "social", label: "Share on Social Media", isCompleted: false },
-  ]);
-
+export function OnboardingChecklist({
+  steps,
+  isVisible,
+  onDismiss,
+}: {
+  steps: ChecklistStep[];
+  isVisible: boolean;
+  onDismiss?: () => void;
+}) {
   const completedCount = steps.filter((s) => s.isCompleted).length;
   const progress = (completedCount / steps.length) * 100;
 
-  useEffect(() => {
-    const dismissed = localStorage.getItem("onboarding_dismissed");
-    if (dismissed) setIsVisible(false);
-  }, []);
-
-  const handleDismiss = () => {
-    setIsVisible(false);
-    localStorage.setItem("onboarding_dismissed", "true");
-  };
+  const handleDismiss = () => onDismiss?.();
 
   if (!isVisible) return null;
 
@@ -46,6 +36,7 @@ export function OnboardingChecklist() {
         size="icon" 
         className="absolute top-2 right-2 h-6 w-6 text-muted-foreground hover:text-foreground"
         onClick={handleDismiss}
+        aria-label="Dismiss onboarding checklist"
       >
         <X className="h-4 w-4" />
       </Button>
