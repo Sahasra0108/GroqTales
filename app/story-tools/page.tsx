@@ -45,43 +45,42 @@ export default function StoryToolsPage() {
   const [showRecoveryModal, setShowRecoveryModal] = useState(false);
 
   // Draft recovery detection on mount
-  useEffect(() => {
-    const saved = localStorage.getItem(DRAFT_KEY);
-    if (!saved) return;
-
-    try {
-      const draft = JSON.parse(saved);
-      if (draft?.content?.trim()) {
-        setRecoveredDraft(draft);
-        setShowRecoveryModal(true);
-      }
-    } catch (error) {
-      console.error('Error parsing draft:', error);
-      localStorage.removeItem(DRAFT_KEY);
-    }
-  }, []);
-
+  
   // Autosave logic with debounce
   useEffect(() => {
-    if (!storyContent.trim()) return;
+  if (!storyContent.trim()) {
+  try {
+    localStorage.removeItem(DRAFT_KEY);
+  } catch (error) {
+    console.warn('Draft cleanup failed:', error);
+  }
+  return;
+}
 
-    const timeout = setTimeout(() => {
-      const draft: StoryToolsDraft = {
-        title: storyTitle,
-        genre: storyGenre,
-        content: storyContent,
-        updatedAt: Date.now(),
-        version: 1,
-      };
-        try {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-      } catch (error) {
-        console.warn('Autosave failed:', error);
-       }
-    }, 1000); // autosave every 1s after typing stops
+  const timeout = setTimeout(() => {
+    const draft: StoryToolsDraft = {
+      title: storyTitle,
+      genre: storyGenre,
+      content: storyContent,
+      updatedAt: Date.now(),
+      version: 1,
+    };
 
-    return () => clearTimeout(timeout);
-  }, [storyTitle, storyGenre, storyContent]);
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch (error) {
+  console.warn('Draft recovery failed:', error);
+  try {
+    localStorage.removeItem(DRAFT_KEY);
+  } catch (removeError) {
+    console.warn('Draft cleanup failed:', removeError);
+  }
+    }
+  }, 1000); // autosave every 1s after typing stops
+
+  return () => clearTimeout(timeout);
+}, [storyTitle, storyGenre, storyContent]);
+
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -173,16 +172,21 @@ export default function StoryToolsPage() {
                       </Button>
                       <Button
                         onClick={() => {
-                          // Discard draft
-                          localStorage.removeItem(DRAFT_KEY);
-                          setShowRecoveryModal(false);
-                          setRecoveredDraft(null);
-                          toast({
-                            title: 'DRAFT DISCARDED',
-                            description: 'Starting fresh!',
-                            className: 'font-bangers bg-gray-400 text-black border-4 border-black',
-                          });
-                        }}
+                      // Discard draft
+                    try {
+                  localStorage.removeItem(DRAFT_KEY);
+                } catch (error) {
+              console.warn('Draft discard failed:', error);
+              }
+              setShowRecoveryModal(false);
+            setRecoveredDraft(null);
+          toast({
+          title: 'DRAFT DISCARDED',
+           description: 'Starting fresh!',
+    className: 'font-bangers bg-gray-400 text-black border-4 border-black',
+  });
+}}
+
                         className="flex-1 font-bangers border-4 border-black bg-white text-black hover:bg-gray-100"
                       >
                         DISCARD
